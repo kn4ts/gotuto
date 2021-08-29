@@ -10,7 +10,9 @@ func main() {
 
 	fmt.Println("Hello")	// 標準出力関数はこんな感じ
 
-	go countFunc(ch,n)	// countFunc関数を並列実行
+	cnt := Count{}	// Count構造体の初期化
+	go cnt.SendCount(ch,n)	// SendCount関数を並列実行
+	//go countFunc(ch,n)	// countFunc関数を並列実行
 	
 	for {	// 無限ループは条件なしfor文
 		recieved_val, ok := <- ch	// チャネルから値取り出し
@@ -22,8 +24,13 @@ func main() {
 	}
 }
 
-/*  カウント関数の定義  */
-func countFunc (ch chan int, n int) {
+/* カウント構造体の定義 */
+type Count struct{
+	Cnt	int
+}
+
+/*  カウント送信関数の定義  */
+func (cnt *Count) SendCount (ch chan int, n int) {
 	for i:=0 ; i<n ; i++ {	// for文はC言語と同じ感じ
 		ch <- i
 	}
